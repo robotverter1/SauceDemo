@@ -22,4 +22,5 @@ public class BasicPage {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
+
 }

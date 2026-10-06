@@ -11,6 +11,15 @@ public class LoginPage extends BasicPage{
     private static final By usernameField = By.id("user-name");
     private static final By passwordField = By.id("password");
     private static final By loginButton = By.id("login-button");
+    private static final By nextPageTitle = By.cssSelector("[data-test='title']");
+
+    public By getLoginButton(){
+        return loginButton;
+    }
+
+    public By getNextPageTitle(){
+        return nextPageTitle;
+    }
 
     public LoginPage(WebDriver driver){
         super(driver);
@@ -21,14 +30,21 @@ public class LoginPage extends BasicPage{
     }
 
     public void enterAuthData(){
-        wait.until(ExpectedConditions.titleIs("Swag Labs"));
         driver.findElement(usernameField).sendKeys(getLoginUsernameFromPage());
         driver.findElement(passwordField).sendKeys(getPasswordFromPage());
         driver.findElement(loginButton).click();
     }
 
-    private String getLoginUsernameFromPage(){
-        return driver.findElement(By.cssSelector("#login_credentials br:nth-of-type(1)")).getText();
+    public void enterAuthData(String username){
+        driver.findElement(usernameField).sendKeys(username);
+        driver.findElement(passwordField).sendKeys(getPasswordFromPage());
+        driver.findElement(loginButton).click();
+    }
+
+    private String getLoginUsernameFromPage(){ //Работает
+        String rawText = driver.findElement(By.id("login_credentials")).getText();
+        String[] standardUsername = rawText.split("\n"); //Здесь спаршенный текст собирается и разделяется по разным строкам внутри массива, т.к. selenium считает, что <br> - это перенос строки
+        return (String) standardUsername[1].trim(); //Этот метод выбирает из списка br-ов вторую спаршенную строку и выдаёт её
     }
 
     private String getPasswordFromPage(){
@@ -38,5 +54,9 @@ public class LoginPage extends BasicPage{
 
     public boolean isAuthCompleted(){
         return driver.findElement(By.cssSelector("[data-test='title']")).isDisplayed();
+    }
+
+    public boolean isAuthFailed(){
+        return driver.findElement(By.cssSelector("h3[data-test='error']")).isDisplayed();
     }
 }

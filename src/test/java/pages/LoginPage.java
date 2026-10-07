@@ -9,8 +9,8 @@ public class LoginPage extends BasicPage{
 
     private static final String URL = "https://www.saucedemo.com";
     private static final By usernameField = By.id("user-name");
-    private static final By passwordField = By.id("password");
-    private static final By loginButton = By.id("login-button");
+    private static final By passwordField = By.cssSelector("[data-test='password']");
+    private static final By loginButton = By.cssSelector("[data-test='login-button']");
     private static final By nextPageTitle = By.cssSelector("[data-test='title']");
 
     public By getLoginButton(){
@@ -30,14 +30,14 @@ public class LoginPage extends BasicPage{
     }
 
     public void enterAuthData(){
-        driver.findElement(usernameField).sendKeys(getLoginUsernameFromPage());
-        driver.findElement(passwordField).sendKeys(getPasswordFromPage());
+        driver.findElement(usernameField).sendKeys("standard_user");
+        driver.findElement(passwordField).sendKeys("secret_sauce");
         driver.findElement(loginButton).click();
     }
 
     public void enterAuthData(String username){
         driver.findElement(usernameField).sendKeys(username);
-        driver.findElement(passwordField).sendKeys(getPasswordFromPage());
+        driver.findElement(passwordField).sendKeys(username);
         driver.findElement(loginButton).click();
     }
 
@@ -47,10 +47,10 @@ public class LoginPage extends BasicPage{
         return (String) standardUsername[1].trim(); //Этот метод выбирает из списка br-ов вторую спаршенную строку и выдаёт её
     }
 
-    private String getPasswordFromPage(){
-        String origPasswordString = driver.findElement(By.cssSelector("[data-test='login-password']")).getText();
-        return origPasswordString.replace("Password for all users:", "").trim();
-    }
+//    private String getPasswordFromPage(){
+//        String origPasswordString = driver.findElement(By.cssSelector("[data-test='login-password']")).getText();
+//        return origPasswordString.replace("Password for all users:", "").trim();
+//    }
 
     public boolean isAuthCompleted(){
         return driver.findElement(By.cssSelector("[data-test='title']")).isDisplayed();
